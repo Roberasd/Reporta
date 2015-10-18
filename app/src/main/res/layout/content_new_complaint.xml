@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_new_complaint"
+    android:background="@drawable/fondo2"
+    android:padding="25dp"
+    tools:context="appdatamx.hackcolima.roberto.reporta.ui.activities.NewComplaint">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="@color/gray"
+        android:text="Reportar Incidente"/>
+
+    <EditText
+        android:id="@+id/editdescription"
+        android:layout_below="@+id/textview"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:hint="Descripción"
+        android:gravity="top"
+        android:textColorHint="@color/gray"
+        android:layout_marginTop="15dp"
+        android:padding="15dp"
+        android:background="@drawable/custom_edit_text"/>
+
+    <ImageView
+        android:id="@+id/buttoncamera"
+        android:layout_below="@+id/editdescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/icono_camara"/>
+
+    <RelativeLayout
+        android:id="@+id/rlsendcomplaint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="25dp"
+        android:paddingLeft="25dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@color/red"
+        android:layout_alignTop="@+id/buttoncamera"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Enviar"/>
+    </RelativeLayout>
+
+</RelativeLayout>

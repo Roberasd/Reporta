@@ -2,25 +2,17 @@ package appdatamx.hackcolima.roberto.reporta.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
 
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import appdatamx.hackcolima.roberto.reporta.R;
-import appdatamx.hackcolima.roberto.reporta.model.UserModel;
 import appdatamx.hackcolima.roberto.reporta.percistence.UserNeuron;
 import appdatamx.hackcolima.roberto.reporta.application.SuperActivity;
 
