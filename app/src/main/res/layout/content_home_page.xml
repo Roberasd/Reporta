@@ -8,6 +8,7 @@
     tools:showIn="@layout/activity_home_page"
     tools:context="appdatamx.hackcolima.roberto.reporta.ui.activities.HomePageActivity">
 
+
     <fragment
         android:layout_above="@+id/rLCategories"
         android:layout_width="match_parent"

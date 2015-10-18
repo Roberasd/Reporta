@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,7 +21,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -43,10 +43,25 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         ViewGroup rLSecurity = (ViewGroup) findViewById(R.id.rlsecurity);
         ViewGroup rLTrafic = (ViewGroup) findViewById(R.id.rltrafic);
         ViewGroup rLUrban = (ViewGroup) findViewById(R.id.rlurban);
+        ViewGroup rLUser = (ViewGroup) findViewById(R.id.rluserinfo);
+        TextView titleToolbar = (TextView) findViewById(R.id.titletoolbar);
 
         rLSecurity.setOnClickListener(this);
         rLTrafic.setOnClickListener(this);
         rLUrban.setOnClickListener(this);
+        rLUser.setOnClickListener(this);
+
+        titleToolbar.setText("Home");
+
+        googleMap =  ((SupportMapFragment) getSupportFragmentManager().findFragmentById(
+                R.id.map)).getMap();
+
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Toast.makeText(getApplicationContext(), "Long!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
     }
@@ -60,7 +75,7 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
     }
 
     private void loadMap(){
-        createMapView();
+        //createMapView();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -114,8 +129,6 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
             googleMap =  ((SupportMapFragment) getSupportFragmentManager().findFragmentById(
                     R.id.map)).getMap();
 
-            //googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-
             if(null == googleMap) {
                 Toast.makeText(getApplicationContext(), "Error creando mapa", Toast.LENGTH_SHORT).show();
 
@@ -126,12 +139,17 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()){
             case R.id.rlsecurity:
                 break;
             case R.id.rltrafic:
                 break;
             case R.id.rlurban:
+                break;
+            case R.id.rluserinfo:
+                intent = new Intent(HomePageActivity.this, UserInfoActivity.class);
+                startActivity(intent);
                 break;
         }
     }

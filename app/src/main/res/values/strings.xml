@@ -5,4 +5,5 @@
     <string name="api_key">AIzaSyARWGIYvgMPdq_a6CUrJaYuBTkZwtBJxpY</string>
     <string name="senderID">326376857148</string>
     <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="title_activity_user_info">UserInfo</string>
 </resources>
