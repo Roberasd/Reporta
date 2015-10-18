@@ -42,6 +42,8 @@ public class NewComplaint extends SuperActivity {
 
         setToolbarAndTittle("Crear denuncia");
 
+        showLoaderDialog();
+        
         rLSendComplaint = (ViewGroup) findViewById(R.id.rlsendcomplaint);
         editDescription = (EditText) findViewById(R.id.editdescription);
         ImageView buttonCamera = (ImageView) findViewById(R.id.buttoncamera);
@@ -51,6 +53,7 @@ public class NewComplaint extends SuperActivity {
 
         Bundle bundle = getIntent().getParcelableExtra("bundle");
         final LatLng latLng = bundle.getParcelable("latLng");
+        final int category = bundle.getInt("category");
 
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +68,7 @@ public class NewComplaint extends SuperActivity {
                 String description = editDescription.getText().toString().trim();
 
                 if(!description.equals("") && !dirPicture.equals(""))
-                    requestToSendComplaint(description, latLng);
+                    requestToSendComplaint(description, latLng, category);
                 else
                     Toast.makeText(getApplicationContext(), "debes de poner la descripción y tomar una foto",
                             Toast.LENGTH_SHORT).show();
@@ -74,9 +77,9 @@ public class NewComplaint extends SuperActivity {
 
     }
 
-    private void requestToSendComplaint(String description, LatLng latLng) {
-        showLoaderDialog();
-        createComplaintRequest.createComplaint(1, description, dirPicture, latLng, new CreateComplaintRequest.CreateComplaintListener() {
+    private void requestToSendComplaint(String description, LatLng latLng, int category) {
+
+        createComplaintRequest.createComplaint(category, description, dirPicture, latLng, new CreateComplaintRequest.CreateComplaintListener() {
             @Override
             public void onSuccess() {
                 hideLoaderDialog();

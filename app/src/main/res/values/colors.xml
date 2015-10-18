@@ -5,14 +5,20 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="green">#a6f000</color>
+    <color name="green_selected">#628c05</color>
+
     <color name="red">#fa3b76</color>
+    <color name="red_selected">#de1151</color>
+
     <color name="blue">#3bb6fd</color>
+    <color name="blue_selected">#007bc2</color>
 
 
     <color name="transparent">#003bb6fd</color>
 
 
     <color name="black">#30434e</color>
+    <color name="black_op">#5030434e</color>
     <color name="gray">#c4c4c4</color>
     <color name="gray2">#50c4c4c4</color>
     <color name="red2">#ff0000</color>

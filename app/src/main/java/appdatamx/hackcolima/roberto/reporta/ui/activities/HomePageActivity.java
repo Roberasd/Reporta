@@ -44,18 +44,20 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
     private Location location;
     private ComplaintsRequest complaintsRequest;
     private int category = 1;
-    private ArrayList<ComplaintModel> clientsModelArrayList;
+    private ArrayList<ComplaintModel> securityComplaints = new ArrayList<ComplaintModel>();
+    private ArrayList<ComplaintModel> traficComplaints = new ArrayList<ComplaintModel>();
+    private ArrayList<ComplaintModel> urbanComplaints = new ArrayList<ComplaintModel>();
     private HashMap<Marker, ComplaintModel> hashMap = new HashMap<>();
-
+    private ViewGroup rLSecurity, rLTrafic, rLUrban;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        ViewGroup rLSecurity = (ViewGroup) findViewById(R.id.rlsecurity);
-        ViewGroup rLTrafic = (ViewGroup) findViewById(R.id.rltrafic);
-        ViewGroup rLUrban = (ViewGroup) findViewById(R.id.rlurban);
+        rLSecurity = (ViewGroup) findViewById(R.id.rlsecurity);
+        rLTrafic = (ViewGroup) findViewById(R.id.rltrafic);
+        rLUrban = (ViewGroup) findViewById(R.id.rlurban);
         ViewGroup rLUser = (ViewGroup) findViewById(R.id.rluserinfo);
         TextView titleToolbar = (TextView) findViewById(R.id.titletoolbar);
 
@@ -71,6 +73,9 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         googleMap =  ((SupportMapFragment) getSupportFragmentManager().findFragmentById(
                 R.id.map)).getMap();
 
+        googleMap.setOnMarkerClickListener(this);
+
+
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -78,6 +83,7 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
 
                 Bundle args = new Bundle();
                 args.putParcelable("latLng", latLng);
+                args.putInt("category", category);
 
                 intent.putExtra("bundle", args);
                 startActivity(intent);
@@ -94,7 +100,18 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         complaintsRequest.getAllComplainst(new ComplaintsRequest.ComplaintsListener() {
             @Override
             public void onSuccess(ArrayList<ComplaintModel> clientsArrayList) {
-                clientsModelArrayList = clientsArrayList;
+                setMarkers(category);
+
+                for (ComplaintModel model : clientsArrayList) {
+
+                    if (model.getCategory_id() == 1) {
+                        traficComplaints.add(model);
+                    }else if (model.getCategory_id() == 2) {
+                        securityComplaints.add(model);
+                    }else{
+                        urbanComplaints.add(model);
+                    }
+                }
             }
 
             @Override
@@ -105,61 +122,51 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         });
     }
 
-    private void setMarkers() {
+    private void setMarkers(int type) {
         MarkerOptions marker;
         googleMap.clear();
 
-
-        switch (category){
+        switch (type){
             case 1:
-                for (ComplaintModel model : clientsModelArrayList){
+                for (ComplaintModel model : traficComplaints){
 
-                    if(model.getCategory_id() == 1) {
-
-                        if((model.getLatitude() != null) && model.getLongitude() != null) {
-                            marker = new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin3))
-                                    .position(new LatLng(Double.parseDouble(model.getLatitude()),
-                                            Double.parseDouble(model.getLongitude())));
-                            Marker m = googleMap.addMarker(marker);
-                            hashMap.put(m, model);
-                        }
+                    if((model.getLatitude() != null) && model.getLongitude() != null) {
+                        marker = new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin3))
+                                .position(new LatLng(Double.parseDouble(model.getLatitude()),
+                                        Double.parseDouble(model.getLongitude())));
+                        Marker m = googleMap.addMarker(marker);
+                        hashMap.put(m, model);
                     }
                 }
 
                 break;
             case 2:
 
-                for (ComplaintModel model : clientsModelArrayList){
+                for (ComplaintModel model : securityComplaints){
 
-                    if(model.getCategory_id() == 1) {
-
-                        if((model.getLatitude() != null) && model.getLongitude() != null) {
-                            marker = new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin1))
-                                    .position(new LatLng(Double.parseDouble(model.getLatitude()),
-                                            Double.parseDouble(model.getLongitude())));
-                            Marker m = googleMap.addMarker(marker);
-                            hashMap.put(m, model);
-                        }
+                    if((model.getLatitude() != null) && model.getLongitude() != null) {
+                        marker = new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin1))
+                                .position(new LatLng(Double.parseDouble(model.getLatitude()),
+                                        Double.parseDouble(model.getLongitude())));
+                        Marker m = googleMap.addMarker(marker);
+                        hashMap.put(m, model);
                     }
                 }
 
                 break;
             case 3:
 
-                for (ComplaintModel model : clientsModelArrayList){
+                for (ComplaintModel model : urbanComplaints){
 
-                    if(model.getCategory_id() == 1) {
-
-                        if((model.getLatitude() != null) && model.getLongitude() != null) {
-                            marker = new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin2))
-                                    .position(new LatLng(Double.parseDouble(model.getLatitude()),
-                                            Double.parseDouble(model.getLongitude())));
-                            Marker m = googleMap.addMarker(marker);
-                            hashMap.put(m, model);
-                        }
+                    if((model.getLatitude() != null) && model.getLongitude() != null) {
+                        marker = new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin2))
+                                .position(new LatLng(Double.parseDouble(model.getLatitude()),
+                                        Double.parseDouble(model.getLongitude())));
+                        Marker m = googleMap.addMarker(marker);
+                        hashMap.put(m, model);
                     }
                 }
 
@@ -243,17 +250,32 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()){
-            case R.id.rlsecurity:
-                category = 1;
-                setMarkers();
-                break;
             case R.id.rltrafic:
+                category = 1;
+                //getTheComplaints();
+                rLTrafic.setBackgroundColor(getResources().getColor(R.color.blue_selected));
+                rLSecurity.setBackgroundColor(getResources().getColor(R.color.red));
+                rLUrban.setBackgroundColor(getResources().getColor(R.color.green));
+
+                setMarkers(category);
+                break;
+            case R.id.rlsecurity:
                 category = 2;
-                setMarkers();
+
+                rLTrafic.setBackgroundColor(getResources().getColor(R.color.blue));
+                rLSecurity.setBackgroundColor(getResources().getColor(R.color.red_selected));
+                rLUrban.setBackgroundColor(getResources().getColor(R.color.green));
+
+                setMarkers(category);
                 break;
             case R.id.rlurban:
                 category = 3;
-                setMarkers();
+
+                rLTrafic.setBackgroundColor(getResources().getColor(R.color.blue));
+                rLSecurity.setBackgroundColor(getResources().getColor(R.color.red));
+                rLUrban.setBackgroundColor(getResources().getColor(R.color.green_selected));
+
+                setMarkers(category);
                 break;
             case R.id.rluserinfo:
                 intent = new Intent(HomePageActivity.this, UserInfoActivity.class);
@@ -281,6 +303,7 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
             googleMap.clear();
             googleMap.setMyLocationEnabled(true);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+            setMarkers(category);
 
         }else{
             mGoogleApiClient.reconnect();

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Roberto Avalos on 18/10/2015.
  */
-public class ComplaintModel implements Parcelable{
+public class ComplaintModel{
 
     @SerializedName("id")
     int id;
@@ -22,74 +22,111 @@ public class ComplaintModel implements Parcelable{
     @SerializedName("longitude")
     String longitude;
 
-    @SerializedName("picture")
-    Picture picture;
+    @SerializedName("image_url")
+    String image_url;
 
     @SerializedName("created_at")
     String created_at;
 
-    @SerializedName("updated_at")
-    String updated_at;
+   @SerializedName("likes")
+    int likes;
 
-    @SerializedName("user_id")
-    int user_id;
+    @SerializedName("user")
+    User user;
 
     @SerializedName("category_id")
     int category_id;
 
-    protected ComplaintModel(Parcel in) {
-        id = in.readInt();
-        description = in.readString();
-        latitude = in.readString();
-        longitude = in.readString();
-        created_at = in.readString();
-        updated_at = in.readString();
-        user_id = in.readInt();
-        category_id = in.readInt();
-    }
+    class User{
+        @SerializedName("id")
+        String id;
 
-    public static final Creator<ComplaintModel> CREATOR = new Creator<ComplaintModel>() {
-        @Override
-        public ComplaintModel createFromParcel(Parcel in) {
-            return new ComplaintModel(in);
+        @SerializedName("email")
+        String email;
+
+        @SerializedName("created_at")
+        String created_at;
+
+        @SerializedName("updated_at")
+        String updated_at;
+
+        @SerializedName("provider")
+        String provider;
+
+        @SerializedName("uid")
+        String uid;
+
+        @SerializedName("profile_picture")
+        String profile_picture;
+
+        @SerializedName("name")
+        String name;
+
+
+        public String getId() {
+            return id;
         }
 
-        @Override
-        public ComplaintModel[] newArray(int size) {
-            return new ComplaintModel[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(description);
-        dest.writeString(latitude);
-        dest.writeString(longitude);
-        dest.writeString(created_at);
-        dest.writeString(updated_at);
-        dest.writeInt(user_id);
-        dest.writeInt(category_id);
-    }
-
-    class Picture{
-        @SerializedName("url")
-        String url;
-
-        public String getUrl() {
-            return url;
+        public void setId(String id) {
+            this.id = id;
         }
 
-        public void setUrl(String url) {
-            this.url = url;
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getCreated_at() {
+            return created_at;
+        }
+
+        public void setCreated_at(String created_at) {
+            this.created_at = created_at;
+        }
+
+        public String getUpdated_at() {
+            return updated_at;
+        }
+
+        public void setUpdated_at(String updated_at) {
+            this.updated_at = updated_at;
+        }
+
+        public String getProvider() {
+            return provider;
+        }
+
+        public void setProvider(String provider) {
+            this.provider = provider;
+        }
+
+        public String getUid() {
+            return uid;
+        }
+
+        public void setUid(String uid) {
+            this.uid = uid;
+        }
+
+        public String getProfile_picture() {
+            return profile_picture;
+        }
+
+        public void setProfile_picture(String profile_picture) {
+            this.profile_picture = profile_picture;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
-
 
     public int getId() {
         return id;
@@ -97,14 +134,6 @@ public class ComplaintModel implements Parcelable{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getCategory_id() {
-        return category_id;
-    }
-
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
     }
 
     public String getDescription() {
@@ -131,12 +160,13 @@ public class ComplaintModel implements Parcelable{
         this.longitude = longitude;
     }
 
-    public Picture getPicture() {
-        return picture;
+
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setPicture(Picture picture) {
-        this.picture = picture;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getCreated_at() {
@@ -147,20 +177,27 @@ public class ComplaintModel implements Parcelable{
         this.created_at = created_at;
     }
 
-    public String getUpdated_at() {
-        return updated_at;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
+    public int getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
+    }
 }
