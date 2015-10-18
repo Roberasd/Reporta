@@ -10,8 +10,16 @@ public class WebService {
         return baseUrl + "reports";
     }
 
+   public static String allComplaintsUrl(){
+        return baseUrl + "reports";
+    }
+
     public static String getCheckUserUrl(String id){
         return baseUrl + "users/"+id;
+    }
+
+   public static String getComplaintDetailUrl(String id){
+        return baseUrl + "reports/"+id;
     }
 
     public static String getRegisterUserUrl(){

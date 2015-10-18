@@ -1,6 +1,7 @@
 package appdatamx.hackcolima.roberto.reporta.request;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -33,28 +34,33 @@ public class ComplaintsRequest {
     public void getAllComplainst(final ComplaintsListener listener){
         client = new AsyncHttpClient();
 
-        String id = userNeuron.getUserId();
-
-        client.get(context.getApplicationContext(), WebService.getCheckUserUrl(id), new AsyncHttpResponseHandler() {
+        client.addHeader("X-AUTH-TOKEN", userNeuron.getUserId());
+        client.get(context.getApplicationContext(), WebService.allComplaintsUrl(), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
                 String responseStr = new String(responseBody);
+                Log.d("Roberto", "todas las denuncias " + responseStr);
 
                 ArrayList<ComplaintModel> clientsModelArrayList = new ArrayList<ComplaintModel>();
 
                 Gson gson = new Gson();
                 JsonParser jsonParser = new JsonParser();
 
-                JsonArray jArray = jsonParser.parse(responseStr).getAsJsonArray();
+                try {
+                    JsonArray jArray = jsonParser.parse(responseStr).getAsJsonArray();
 
-                for (JsonElement obj : jArray) {
+                    for (JsonElement obj : jArray) {
 
-                    ComplaintModel complaintModel = gson.fromJson(obj, ComplaintModel.class);
-                    clientsModelArrayList.add(complaintModel);
+                        ComplaintModel complaintModel = gson.fromJson(obj, ComplaintModel.class);
+                        clientsModelArrayList.add(complaintModel);
+                    }
+
+                    listener.onSuccess(clientsModelArrayList);
+                }catch (Exception e){
+                    listener.onFaliure(e.getMessage());
                 }
 
-                listener.onSuccess(clientsModelArrayList);
             }
 
             @Override

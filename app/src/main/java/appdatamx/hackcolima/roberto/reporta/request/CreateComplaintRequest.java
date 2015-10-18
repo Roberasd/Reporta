@@ -51,7 +51,7 @@ public class CreateComplaintRequest {
         }
 
 
-        client.addHeader("X-Auth-Token", userNeuron.getAccessToken());
+        client.addHeader("X-AUTH-TOKEN", userNeuron.getUserId());
         client.post(context.getApplicationContext(), WebService.createComplaintUrl(), params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

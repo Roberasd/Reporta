@@ -24,15 +24,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import appdatamx.hackcolima.roberto.reporta.R;
 import appdatamx.hackcolima.roberto.reporta.model.ComplaintModel;
 import appdatamx.hackcolima.roberto.reporta.request.ComplaintsRequest;
 
-public class HomePageActivity extends FragmentActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class HomePageActivity extends FragmentActivity implements View.OnClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener{
 
     private GoogleMap googleMap;
     private GoogleApiClient mGoogleApiClient;
@@ -41,6 +45,7 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
     private ComplaintsRequest complaintsRequest;
     private int category = 1;
     private ArrayList<ComplaintModel> clientsModelArrayList;
+    private HashMap<Marker, ComplaintModel> hashMap = new HashMap<>();
 
 
     @Override
@@ -94,6 +99,7 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
 
             @Override
             public void onFaliure(String error) {
+                Log.d("Roberto", "error " + error);
 
             }
         });
@@ -107,16 +113,56 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         switch (category){
             case 1:
                 for (ComplaintModel model : clientsModelArrayList){
-                    marker = new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin3))
-                            .position(new LatLng(Double.parseDouble(model.getLatitude()),
-                                    Double.parseDouble(model.getLongitude())));
+
+                    if(model.getCategory_id() == 1) {
+
+                        if((model.getLatitude() != null) && model.getLongitude() != null) {
+                            marker = new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin3))
+                                    .position(new LatLng(Double.parseDouble(model.getLatitude()),
+                                            Double.parseDouble(model.getLongitude())));
+                            Marker m = googleMap.addMarker(marker);
+                            hashMap.put(m, model);
+                        }
+                    }
                 }
 
                 break;
             case 2:
+
+                for (ComplaintModel model : clientsModelArrayList){
+
+                    if(model.getCategory_id() == 1) {
+
+                        if((model.getLatitude() != null) && model.getLongitude() != null) {
+                            marker = new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin1))
+                                    .position(new LatLng(Double.parseDouble(model.getLatitude()),
+                                            Double.parseDouble(model.getLongitude())));
+                            Marker m = googleMap.addMarker(marker);
+                            hashMap.put(m, model);
+                        }
+                    }
+                }
+
                 break;
             case 3:
+
+                for (ComplaintModel model : clientsModelArrayList){
+
+                    if(model.getCategory_id() == 1) {
+
+                        if((model.getLatitude() != null) && model.getLongitude() != null) {
+                            marker = new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin2))
+                                    .position(new LatLng(Double.parseDouble(model.getLatitude()),
+                                            Double.parseDouble(model.getLongitude())));
+                            Marker m = googleMap.addMarker(marker);
+                            hashMap.put(m, model);
+                        }
+                    }
+                }
+
                 break;
         }
 
@@ -218,6 +264,7 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         }
     }
 
+
     @Override
     public void onConnected(Bundle bundle) {
         mLocationRequest = LocationRequest.create();
@@ -232,11 +279,8 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
                 createMapView();
 
             googleMap.clear();
+            googleMap.setMyLocationEnabled(true);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
-            googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                    .title("Mi ubicación"));
-            setMarkers();
 
         }else{
             mGoogleApiClient.reconnect();
@@ -251,5 +295,16 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        ComplaintModel model =  hashMap.get(marker);
+        Intent intent = new Intent(HomePageActivity.this, ComplaintDetail.class);
+        intent.putExtra("complaint_id", model.getId());
+        intent.putExtra("category", model.getCategory_id());
+        startActivity(intent);
+
+        return false;
     }
 }

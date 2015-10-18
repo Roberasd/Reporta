@@ -15,6 +15,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -24,12 +25,13 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import appdatamx.hackcolima.roberto.reporta.R;
+import appdatamx.hackcolima.roberto.reporta.application.SuperActivity;
 import appdatamx.hackcolima.roberto.reporta.model.UserModel;
 import appdatamx.hackcolima.roberto.reporta.percistence.UserNeuron;
 import appdatamx.hackcolima.roberto.reporta.request.CheckUserIfExistRequest;
 import appdatamx.hackcolima.roberto.reporta.request.RegisterUserRequest;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends SuperActivity {
 
     private CallbackManager callbackManager;
     private UserNeuron userNeuron;
@@ -50,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_prfile", "email"));
+        //loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -64,15 +66,14 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 // Application code
-
+                                showLoaderDialog();
                                 try {
-                                    if(!object.getString("email").equals(""))
-                                        model.setEmail(object.getString("email"));
 
                                     model.setId(object.getString("id"));
                                     model.setName(object.getString("name"));
-                                    model.setAccessToken(AccessToken.getCurrentAccessToken().toString());
+                                    model.setAccessToken(AccessToken.getCurrentAccessToken().getToken());
                                     userNeuron.saveUserSignUp(model);
+                                    Log.d("Rober", "access token " + model.getAccessToken());
                                     userIsRegistered();
 
 
@@ -106,11 +107,13 @@ public class LoginActivity extends AppCompatActivity {
         checkUserIfExistRequest.checkUser(new CheckUserIfExistRequest.CheckUserIfExistRequestLitener() {
             @Override
             public void onSuccess(JSONObject jsonObject) {
+
                 try {
                     if (jsonObject.getString("message").equals("user not found"))
                         registerUser();
-                    else
+                    else {
                         startHomeActivity();
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -119,7 +122,9 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFaliure(String error) {
-
+                hideLoaderDialog();
+                LoginManager.getInstance().logOut();
+                Log.d("Rober", "Error exist usuer " + error);
             }
         });
     }
@@ -129,11 +134,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 startHomeActivity();
+
             }
 
             @Override
             public void onFaliure(String error) {
-
+                hideLoaderDialog();
+                LoginManager.getInstance().logOut();
+                Log.d("Rober", "registrando usuario " + error);
             }
         });
     }
@@ -151,4 +159,8 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }
