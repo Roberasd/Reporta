@@ -156,7 +156,9 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
                 break;
             case R.id.rluserinfo:
                 intent = new Intent(HomePageActivity.this, UserInfoActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
                 break;
         }
     }

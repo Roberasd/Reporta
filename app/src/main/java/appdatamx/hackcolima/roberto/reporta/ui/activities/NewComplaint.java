@@ -4,14 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,6 +18,7 @@ import java.io.File;
 
 import appdatamx.hackcolima.roberto.reporta.R;
 import appdatamx.hackcolima.roberto.reporta.application.SuperActivity;
+import appdatamx.hackcolima.roberto.reporta.request.CreateComplaintRequest;
 import appdatamx.hackcolima.roberto.reporta.utils.Constants;
 
 public class NewComplaint extends SuperActivity {
@@ -29,6 +26,8 @@ public class NewComplaint extends SuperActivity {
     private ViewGroup rLSendComplaint;
     private EditText editDescription;
     private ImageView buttonCamera;
+    private CreateComplaintRequest createComplaintRequest;
+    private String dirPicture;
     private int PHOTO_CODE = 100;
 
     @Override
@@ -42,8 +41,10 @@ public class NewComplaint extends SuperActivity {
         editDescription = (EditText) findViewById(R.id.editdescription);
         buttonCamera = (ImageView) findViewById(R.id.buttoncamera);
 
+        createComplaintRequest = new CreateComplaintRequest(getApplicationContext());
+
         Bundle bundle = getIntent().getParcelableExtra("bundle");
-        LatLng latLng = bundle.getParcelable("latLng");
+        final LatLng latLng = bundle.getParcelable("latLng");
 
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +59,7 @@ public class NewComplaint extends SuperActivity {
                 String description = editDescription.getText().toString().trim();
 
                 if(!description.equals(""))
-                    requestToSendComplaint(description);
+                    requestToSendComplaint(description, latLng);
                 else
                     Toast.makeText(getApplicationContext(), "debes de poner la descripción",
                             Toast.LENGTH_SHORT).show();
@@ -67,8 +68,18 @@ public class NewComplaint extends SuperActivity {
 
     }
 
-    private void requestToSendComplaint(String description) {
+    private void requestToSendComplaint(String description, LatLng latLng) {
+        createComplaintRequest.createComplaint(1, description, dirPicture, latLng, new CreateComplaintRequest.CreateComplaintListener() {
+            @Override
+            public void onSuccess() {
 
+            }
+
+            @Override
+            public void onFaliure(String error) {
+
+            }
+        });
 
     }
 
@@ -95,10 +106,8 @@ public class NewComplaint extends SuperActivity {
         if(resultOK){
             if(requestCode == PHOTO_CODE){
 
-                String dirPiture =  Environment.getExternalStorageDirectory() + File.separator
+                dirPicture =  Environment.getExternalStorageDirectory() + File.separator
                         + Constants.MEDIA_DIRECTORY + File.separator + Constants.TEMPORAL_PICTURE_NAME;
-
-                Log.d("PATH", dirPiture);
 
             }
 

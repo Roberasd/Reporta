@@ -25,10 +25,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp" />
 
-    <com.facebook.login.widget.LoginButton
+    <Button
         android:layout_below="@+id/profile_image"
         android:layout_marginTop="20dp"
         android:id="@+id/login_button"
+        android:text="Cerrar sesión"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

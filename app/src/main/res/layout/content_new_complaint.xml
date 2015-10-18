@@ -17,21 +17,35 @@
         android:textColor="@color/gray"
         android:text="Reportar Incidente"/>
 
-    <EditText
-        android:id="@+id/editdescription"
-        android:layout_below="@+id/textview"
+    <RelativeLayout
+        android:layout_marginTop="15dp"
+        android:id="@+id/rlcontent"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:hint="Descripción"
-        android:gravity="top"
-        android:textColorHint="@color/gray"
-        android:layout_marginTop="15dp"
-        android:padding="15dp"
-        android:background="@drawable/custom_edit_text"/>
+        android:layout_below="@+id/textview">
+
+        <ImageView
+            android:id="@+id/complaintImage"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/editdescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripción"
+            android:gravity="top"
+            android:textColorHint="@color/gray"
+            android:padding="15dp"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/buttoncamera"
-        android:layout_below="@+id/editdescription"
+        android:layout_below="@+id/rlcontent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

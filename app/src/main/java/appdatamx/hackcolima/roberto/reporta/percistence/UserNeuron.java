@@ -15,6 +15,7 @@ public class UserNeuron {
 
     private static final String _ID = "user_id";
     private static final String NAME = "user_name";
+    private static final String EMAIL = "user_email";
 
     private static final String LOGGED            = "logged";
 
@@ -29,13 +30,17 @@ public class UserNeuron {
     public void saveUserSignUp(UserModel user){
         editor.putString(NAME, user.getName());
         editor.putString(_ID, user.getId());
+        editor.putString(EMAIL, user.getEmail());
 
         editor.commit();
     }
 
-
     public String getUserId(){
         return manager.getString(_ID, "");
+    }
+
+    public String getEmail(){
+        return manager.getString(EMAIL, "");
     }
 
     public void setItIsLogged(boolean logged){
@@ -45,5 +50,10 @@ public class UserNeuron {
 
     public boolean getItIsLogged(){
         return manager.getBoolean(LOGGED, false);
+    }
+
+    public void logout(){
+        editor.clear();
+        editor.commit();
     }
 }

@@ -25,11 +25,13 @@ import java.util.Arrays;
 import appdatamx.hackcolima.roberto.reporta.R;
 import appdatamx.hackcolima.roberto.reporta.model.UserModel;
 import appdatamx.hackcolima.roberto.reporta.percistence.UserNeuron;
+import appdatamx.hackcolima.roberto.reporta.request.CheckUserIfExistRequest;
 
 public class LoginActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private UserNeuron userNeuron;
+    private CheckUserIfExistRequest checkUserIfExistRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +40,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         userNeuron = new UserNeuron(getApplicationContext());
+        checkUserIfExistRequest = new CheckUserIfExistRequest(getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        //loginButton.setReadPermissions(Arrays.asList("user_status"));
+        loginButton.setReadPermissions(Arrays.asList("public_prfile", "email"));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -56,13 +59,18 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 // Application code
-                                Log.d("Rober", "response " + object.toString());
                                 UserModel model = new UserModel();
 
                                 try {
+
+                                    if(!object.getString("email").equals(""))
+                                        model.setEmail(object.getString("email"));
+
                                     model.setId(object.getString("id"));
                                     model.setName(object.getString("name"));
                                     userNeuron.saveUserSignUp(model);
+                                    userIsRegistered(model);
+
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -92,6 +100,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void userIsRegistered(UserModel model) {
+        checkUserIfExistRequest.checkUser(new CheckUserIfExistRequest.CheckUserIfExistRequestLitener() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFaliure(String error) {
+
+            }
+        });
     }
 
     @Override
