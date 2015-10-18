@@ -3,6 +3,7 @@ package appdatamx.hackcolima.roberto.reporta.ui.activities;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import appdatamx.hackcolima.roberto.reporta.R;
@@ -39,14 +40,17 @@ public class ComplaintDetail extends SuperActivity {
     }
 
     private void detailComplaint(int id) {
+        showLoaderDialog();
         complaintDetailRequest.getInfoComplaint(id, new ComplaintDetailRequest.ComplaintListener() {
             @Override
             public void onSuccess(ComplaintModel model) {
+
                 texttodescription.setText(model.getDescription());
 
                 ApplicationController.getInstance().getImageLoader(getApplicationContext())
                         .displayImage(model.getImage_url(), complaintImage);
 
+                hideLoaderDialog();
             }
 
             @Override

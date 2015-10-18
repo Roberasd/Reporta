@@ -28,7 +28,6 @@ import appdatamx.hackcolima.roberto.reporta.utils.Constants;
 
 public class NewComplaint extends SuperActivity {
 
-    private ViewGroup rLSendComplaint;
     private EditText editDescription;
     private ImageView complaintImage;
     private CreateComplaintRequest createComplaintRequest;
@@ -42,9 +41,7 @@ public class NewComplaint extends SuperActivity {
 
         setToolbarAndTittle("Crear denuncia");
 
-        showLoaderDialog();
-        
-        rLSendComplaint = (ViewGroup) findViewById(R.id.rlsendcomplaint);
+        ViewGroup rLSendComplaint = (ViewGroup) findViewById(R.id.rlsendcomplaint);
         editDescription = (EditText) findViewById(R.id.editdescription);
         ImageView buttonCamera = (ImageView) findViewById(R.id.buttoncamera);
         complaintImage = (ImageView) findViewById(R.id.complaintImage);
@@ -78,7 +75,7 @@ public class NewComplaint extends SuperActivity {
     }
 
     private void requestToSendComplaint(String description, LatLng latLng, int category) {
-
+        showLoaderDialog();
         createComplaintRequest.createComplaint(category, description, dirPicture, latLng, new CreateComplaintRequest.CreateComplaintListener() {
             @Override
             public void onSuccess() {
