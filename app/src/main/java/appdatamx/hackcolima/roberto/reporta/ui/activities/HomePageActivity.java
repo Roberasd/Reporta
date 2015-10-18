@@ -1,27 +1,44 @@
 package appdatamx.hackcolima.roberto.reporta.ui.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import appdatamx.hackcolima.roberto.reporta.R;
 
-public class HomePageActivity extends AppCompatActivity implements View.OnClickListener{
+public class HomePageActivity extends FragmentActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap googleMap;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Location location;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        toolbar.setTitle("Home");
 
         ViewGroup rLSecurity = (ViewGroup) findViewById(R.id.rlsecurity);
         ViewGroup rLTrafic = (ViewGroup) findViewById(R.id.rltrafic);
@@ -35,6 +52,79 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (gpsEnabled()){
+            loadMap();
+        }
+    }
+
+    private void loadMap(){
+        createMapView();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    private boolean gpsEnabled(){
+        LocationManager lm = null;
+        boolean gps_enabled = false;
+        if(lm==null)
+            lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        try{
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        }catch(Exception ex){
+            Log.d("Robert", ex.getMessage());
+        }
+
+        if(!gps_enabled){
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setMessage("Por favor habilita tu gps");
+            dialog.setPositiveButton("Abrir configuraciones", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS );
+                    startActivity(myIntent);
+                    //get gps
+                }
+            });
+            dialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    finish();
+                    Toast.makeText(getApplicationContext(), "Es necesario que habilites tu GPS", Toast.LENGTH_SHORT).show();
+                }
+            });
+            dialog.show();
+
+        }
+
+        return gps_enabled;
+    }
+
+    private void createMapView() {
+        if(googleMap == null){
+            googleMap =  ((SupportMapFragment) getSupportFragmentManager().findFragmentById(
+                    R.id.map)).getMap();
+
+            //googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+
+            if(null == googleMap) {
+                Toast.makeText(getApplicationContext(), "Error creando mapa", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.rlsecurity:
@@ -44,5 +134,38 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case R.id.rlurban:
                 break;
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+
+        if (location != null) {
+
+            if(googleMap == null)
+                createMapView();
+
+            googleMap.clear();
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16));
+            googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                    .title("Mi ubicación"));
+        }else{
+            mGoogleApiClient.reconnect();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }
