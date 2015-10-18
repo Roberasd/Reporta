@@ -1,4 +1,4 @@
-package appdatamx.hackcolima.roberto.reporta.ui;
+package appdatamx.hackcolima.roberto.reporta.application;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;

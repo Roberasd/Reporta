@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.appevents.AppEventsLogger;
+
 import appdatamx.hackcolima.roberto.reporta.R;
+import appdatamx.hackcolima.roberto.reporta.percistence.UserNeuron;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -25,12 +28,24 @@ public class SplashActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Intent intent = new Intent(SplashActivity.this, HomePageActivity.class);
-                startActivity(intent);
+                UserNeuron userNeuron = new UserNeuron(getApplicationContext());
+                Intent intent;
+
+                if(userNeuron.getItIsLogged()){
+                    intent = new Intent(SplashActivity.this, HomePageActivity.class);
+                    startActivity(intent);
+                }else{
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+
                 finish();
+
+
             }
         });
 
         mSpalsh.start();
     }
+
 }
