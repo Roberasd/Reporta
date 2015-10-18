@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.File;
 
 import appdatamx.hackcolima.roberto.reporta.R;
@@ -39,6 +41,9 @@ public class NewComplaint extends SuperActivity {
         rLSendComplaint = (ViewGroup) findViewById(R.id.rlsendcomplaint);
         editDescription = (EditText) findViewById(R.id.editdescription);
         buttonCamera = (ImageView) findViewById(R.id.buttoncamera);
+
+        Bundle bundle = getIntent().getParcelableExtra("bundle");
+        LatLng latLng = bundle.getParcelable("latLng");
 
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override

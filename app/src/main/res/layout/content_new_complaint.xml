@@ -45,7 +45,7 @@
         android:paddingLeft="25dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:background="@color/red"
+        android:background="@color/red2"
         android:layout_alignTop="@+id/buttoncamera"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true">

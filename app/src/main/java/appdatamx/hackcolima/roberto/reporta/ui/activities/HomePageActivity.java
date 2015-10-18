@@ -59,7 +59,14 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                Toast.makeText(getApplicationContext(), "Long!!!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(HomePageActivity.this, NewComplaint.class);
+
+                Bundle args = new Bundle();
+                args.putParcelable("latLng", latLng);
+
+                intent.putExtra("bundle", args);
+                startActivity(intent);
+
             }
         });
 

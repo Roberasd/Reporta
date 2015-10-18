@@ -77,6 +77,10 @@
             android:name=".ui.activities.NewComplaint"
             android:label="@string/title_activity_new_complaint" >
         </activity>
+        <activity
+            android:name=".ui.activities.ComplaintDetail"
+            android:label="@string/title_activity_complaint_detail" >
+        </activity>
     </application>
 
 </manifest>
