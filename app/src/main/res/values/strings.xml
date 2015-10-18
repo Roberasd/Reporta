@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Reporta</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="api_key">AIzaSyARWGIYvgMPdq_a6CUrJaYuBTkZwtBJxpY</string>
+    <string name="senderID">326376857148</string>
+    <string name="title_activity_home_page">HomePageActivity</string>
+</resources>
