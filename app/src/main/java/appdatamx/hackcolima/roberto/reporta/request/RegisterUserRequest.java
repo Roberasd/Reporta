@@ -24,11 +24,12 @@ public class RegisterUserRequest {
         userNeuron = new UserNeuron(context);
     }
 
-    public void checkUser(final RegisterUserListener listener){
+    public void registerUser(final RegisterUserListener listener){
         client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("uid", userNeuron.getUserId());
         params.put("email", userNeuron.getEmail());
+        params.put("name", userNeuron.getName());
 
         String id = userNeuron.getUserId();
 

@@ -2,17 +2,16 @@ package appdatamx.hackcolima.roberto.reporta.request;
 
 import android.content.Context;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
+import appdatamx.hackcolima.roberto.reporta.model.ComplaintModel;
 import appdatamx.hackcolima.roberto.reporta.percistence.UserNeuron;
 import appdatamx.hackcolima.roberto.reporta.web.WebService;
 import cz.msebera.android.httpclient.Header;
@@ -20,18 +19,18 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by Roberto Avalos on 18/10/2015.
  */
-public class CheckUserIfExistRequest {
+public class ComplaintsRequest {
 
     private AsyncHttpClient client;
     private Context context;
     private UserNeuron userNeuron;
 
-    public CheckUserIfExistRequest(Context context){
+    public ComplaintsRequest(Context context){
         this.context = context;
         userNeuron = new UserNeuron(context);
     }
 
-    public void checkUser(final CheckUserIfExistRequestLitener listener){
+    public void getAllComplainst(final ComplaintsListener listener){
         client = new AsyncHttpClient();
 
         String id = userNeuron.getUserId();
@@ -40,16 +39,22 @@ public class CheckUserIfExistRequest {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                String response = new String (responseBody);
+                String responseStr = new String(responseBody);
 
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
+                ArrayList<ComplaintModel> clientsModelArrayList = new ArrayList<ComplaintModel>();
 
-                    listener.onSuccess(jsonObject);
+                Gson gson = new Gson();
+                JsonParser jsonParser = new JsonParser();
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                JsonArray jArray = jsonParser.parse(responseStr).getAsJsonArray();
+
+                for (JsonElement obj : jArray) {
+
+                    ComplaintModel complaintModel = gson.fromJson(obj, ComplaintModel.class);
+                    clientsModelArrayList.add(complaintModel);
                 }
+
+                listener.onSuccess(clientsModelArrayList);
             }
 
             @Override
@@ -65,8 +70,8 @@ public class CheckUserIfExistRequest {
     }
 
 
-    public interface CheckUserIfExistRequestLitener{
-        void onSuccess(JSONObject jsonObject);
+    public interface ComplaintsListener{
+        void onSuccess(ArrayList<ComplaintModel> clientsModelArrayList);
         void onFaliure(String error);
     }
 }

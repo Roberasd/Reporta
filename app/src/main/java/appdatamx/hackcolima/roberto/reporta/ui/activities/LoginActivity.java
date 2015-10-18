@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -26,12 +27,15 @@ import appdatamx.hackcolima.roberto.reporta.R;
 import appdatamx.hackcolima.roberto.reporta.model.UserModel;
 import appdatamx.hackcolima.roberto.reporta.percistence.UserNeuron;
 import appdatamx.hackcolima.roberto.reporta.request.CheckUserIfExistRequest;
+import appdatamx.hackcolima.roberto.reporta.request.RegisterUserRequest;
 
 public class LoginActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private UserNeuron userNeuron;
     private CheckUserIfExistRequest checkUserIfExistRequest;
+    private RegisterUserRequest registerUserRequest;
+    private UserModel model = new UserModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
         userNeuron = new UserNeuron(getApplicationContext());
         checkUserIfExistRequest = new CheckUserIfExistRequest(getApplicationContext());
+        registerUserRequest = new RegisterUserRequest(getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -59,17 +64,16 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 // Application code
-                                UserModel model = new UserModel();
 
                                 try {
-
                                     if(!object.getString("email").equals(""))
                                         model.setEmail(object.getString("email"));
 
                                     model.setId(object.getString("id"));
                                     model.setName(object.getString("name"));
+                                    model.setAccessToken(AccessToken.getCurrentAccessToken().toString());
                                     userNeuron.saveUserSignUp(model);
-                                    userIsRegistered(model);
+                                    userIsRegistered();
 
 
                                 } catch (JSONException e) {
@@ -79,10 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                         });
 
                 request.executeAsync();
-
-                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                startActivity(intent);
-                userNeuron.setItIsLogged(true);
             }
 
             @Override
@@ -102,11 +102,19 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void userIsRegistered(UserModel model) {
+    private void userIsRegistered() {
         checkUserIfExistRequest.checkUser(new CheckUserIfExistRequest.CheckUserIfExistRequestLitener() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(JSONObject jsonObject) {
+                try {
+                    if (jsonObject.getString("message").equals("user not found"))
+                        registerUser();
+                    else
+                        startHomeActivity();
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -114,6 +122,27 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void registerUser() {
+        registerUserRequest.registerUser(new RegisterUserRequest.RegisterUserListener() {
+            @Override
+            public void onSuccess() {
+                startHomeActivity();
+            }
+
+            @Override
+            public void onFaliure(String error) {
+
+            }
+        });
+    }
+
+    private void startHomeActivity() {
+        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+        startActivity(intent);
+        userNeuron.setItIsLogged(true);
+        finish();
     }
 
     @Override

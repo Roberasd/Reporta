@@ -24,22 +24,7 @@
                 android:layout_gravity="center"
                 android:textColor="@color/white"/>
 
-            <RelativeLayout
-                android:id="@+id/rluserinfo"
-                android:padding="15dp"
-                android:gravity="end"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_gravity="end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/user"/>
-
-            </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 

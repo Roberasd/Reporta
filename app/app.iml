@@ -132,8 +132,8 @@
     <orderEntry type="library" exported="" name="play-services-cast-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="facebook-android-sdk-4.7.0" level="project" />
     <orderEntry type="library" exported="" name="mediarouter-v7-22.2.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-fitness-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-identity-8.1.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-fitness-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-appindexing-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-8.1.0" level="project" />
@@ -142,6 +142,7 @@
     <orderEntry type="library" exported="" name="play-services-vision-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="android-async-http-1.4.9" level="project" />
     <orderEntry type="library" exported="" name="play-services-wallet-8.1.0" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.0.1" level="project" />

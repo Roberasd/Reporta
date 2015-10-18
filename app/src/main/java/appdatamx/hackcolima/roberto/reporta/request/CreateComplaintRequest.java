@@ -2,6 +2,8 @@ package appdatamx.hackcolima.roberto.reporta.request;
 
 import android.content.Context;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
 import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -30,22 +32,26 @@ public class CreateComplaintRequest {
 
     public void createComplaint(int categoryId, String description, String picture, LatLng latLng, final CreateComplaintListener listener){
         client = new AsyncHttpClient();
+
         RequestParams params = new RequestParams();
 
         File newFile = new File(picture);
 
         try {
-            params.put("description", description);
-            params.put("latitude", latLng.latitude);
-            params.put("longitude", latLng.longitude);
-            params.put("picture", newFile);
-            params.put("category_id", categoryId);
-            params.put("user_id", userNeuron.getUserId());
+            params.put("report[description]", description);
+            params.put("report[latitude]", latLng.latitude);
+            params.put("report[longitude]", latLng.longitude);
+            params.put("report[picture]", newFile);
+            params.put("report[category_id]", categoryId);
+            params.put("report[user_id]", userNeuron.getUserId());
+            //params.put("user_id", userNeuron.getUserId());
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
+
+        client.addHeader("X-Auth-Token", userNeuron.getAccessToken());
         client.post(context.getApplicationContext(), WebService.createComplaintUrl(), params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

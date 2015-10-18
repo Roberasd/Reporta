@@ -8,6 +8,15 @@ public class UserModel {
     String id;
     String name;
     String email;
+    String accessToken;
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
     public String getEmail() {
         return email;

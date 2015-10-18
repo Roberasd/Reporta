@@ -26,6 +26,7 @@
 
         <ImageView
             android:id="@+id/complaintImage"
+            android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -36,7 +37,8 @@
             android:layout_height="wrap_content"
             android:hint="Descripción"
             android:gravity="top"
-            android:textColorHint="@color/gray"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:padding="15dp"
             android:layout_alignParentBottom="true"/>
 

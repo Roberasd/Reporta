@@ -22,10 +22,15 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 import appdatamx.hackcolima.roberto.reporta.R;
+import appdatamx.hackcolima.roberto.reporta.model.ComplaintModel;
+import appdatamx.hackcolima.roberto.reporta.request.ComplaintsRequest;
 
 public class HomePageActivity extends FragmentActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -33,6 +38,9 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location location;
+    private ComplaintsRequest complaintsRequest;
+    private int category = 1;
+    private ArrayList<ComplaintModel> clientsModelArrayList;
 
 
     @Override
@@ -45,6 +53,8 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         ViewGroup rLUrban = (ViewGroup) findViewById(R.id.rlurban);
         ViewGroup rLUser = (ViewGroup) findViewById(R.id.rluserinfo);
         TextView titleToolbar = (TextView) findViewById(R.id.titletoolbar);
+
+        complaintsRequest = new ComplaintsRequest(getApplicationContext());
 
         rLSecurity.setOnClickListener(this);
         rLTrafic.setOnClickListener(this);
@@ -70,6 +80,45 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
             }
         });
 
+        getTheComplaints();
+
+
+    }
+
+    private void getTheComplaints() {
+        complaintsRequest.getAllComplainst(new ComplaintsRequest.ComplaintsListener() {
+            @Override
+            public void onSuccess(ArrayList<ComplaintModel> clientsArrayList) {
+                clientsModelArrayList = clientsArrayList;
+            }
+
+            @Override
+            public void onFaliure(String error) {
+
+            }
+        });
+    }
+
+    private void setMarkers() {
+        MarkerOptions marker;
+        googleMap.clear();
+
+
+        switch (category){
+            case 1:
+                for (ComplaintModel model : clientsModelArrayList){
+                    marker = new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin3))
+                            .position(new LatLng(Double.parseDouble(model.getLatitude()),
+                                    Double.parseDouble(model.getLongitude())));
+                }
+
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
 
     }
 
@@ -149,10 +198,16 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
         Intent intent;
         switch (v.getId()){
             case R.id.rlsecurity:
+                category = 1;
+                setMarkers();
                 break;
             case R.id.rltrafic:
+                category = 2;
+                setMarkers();
                 break;
             case R.id.rlurban:
+                category = 3;
+                setMarkers();
                 break;
             case R.id.rluserinfo:
                 intent = new Intent(HomePageActivity.this, UserInfoActivity.class);
@@ -181,6 +236,8 @@ public class HomePageActivity extends FragmentActivity implements View.OnClickLi
             googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(location.getLatitude(), location.getLongitude()))
                     .title("Mi ubicación"));
+            setMarkers();
+
         }else{
             mGoogleApiClient.reconnect();
         }
